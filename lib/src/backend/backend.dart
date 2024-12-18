@@ -10,6 +10,7 @@ import 'package:food_traker/src/backend/types/daily_overview_data.dart';
 import 'package:food_traker/src/backend/types/exceptions/food_already_present.dart';
 import 'package:food_traker/src/backend/types/exceptions/insane_value.dart';
 import 'package:food_traker/src/backend/types/exceptions/no_food_founded.dart';
+import 'package:food_traker/src/backend/types/exceptions/recipe_already_present.dart';
 import 'package:food_traker/src/backend/types/gender.dart';
 import 'package:food_traker/src/backend/types/ingredient.dart';
 import 'package:food_traker/src/backend/types/meal_session.dart';
@@ -805,6 +806,12 @@ SELECT SUM(price) FROM MealSession where timestamp >= ? AND timestamp <= ?
       await db.delete('RecipesIngredients',
           where: 'recipe_id = ?', whereArgs: [mealId]);
     } else {
+      /// Firse we need to check if another Recipe exists with the same name
+      final List<Map<String, Object?>> existingRecipes =
+          await db.query('Recipes', where: 'name = ?', whereArgs: [name]);
+      if (existingRecipes.isNotEmpty) {
+        throw RecipeAlreadyPresent('Recipe with name "$name" already present.');
+      }
       mealId = await db.insert('Recipes', {'name': name});
     }
 

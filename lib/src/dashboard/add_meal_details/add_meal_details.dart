@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:food_traker/src/backend/backend.dart';
 import 'package:food_traker/src/backend/gemini_manager.dart';
 import 'package:food_traker/src/backend/meal_data.dart';
+import 'package:food_traker/src/backend/types/exceptions/recipe_already_present.dart';
 import 'package:food_traker/src/backend/types/ingredient.dart';
 import 'package:food_traker/src/backend/types/recipe.dart';
 import 'package:food_traker/src/backend/types/meal_session.dart';
@@ -376,7 +377,12 @@ class _AddMealDetailsState extends State<AddMealDetails> {
       if (response) {
         final String? mealName = await askNameOfNewRecipe();
         if (mealName != null) {
-          await backend.addMeal(mealName, ingredientController.ingredients);
+          try {
+            await backend.addMeal(mealName, ingredientController.ingredients);
+          } on RecipeAlreadyPresent catch (e) {
+            if (mounted) await e.showAlert(context, mealName);
+            return;
+          }
         }
       }
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_traker/src/backend/backend.dart';
+import 'package:food_traker/src/backend/types/exceptions/recipe_already_present.dart';
 import 'package:food_traker/src/backend/types/ingredient.dart';
 import 'package:food_traker/src/backend/types/recipe.dart';
 import 'package:food_traker/src/dashboard/add_ingredient/add_ingredient.dart';
@@ -84,9 +85,16 @@ class _CreateNewMealState extends State<CreateNewMeal> {
                   await showAlertAddIngredients();
                   return;
                 }
-                await backend.addMeal(
-                    _nameController.text, ingredientController.ingredients,
-                    recipe: widget.meal);
+                try {
+                  await backend.addMeal(
+                      _nameController.text, ingredientController.ingredients,
+                      recipe: widget.meal);
+                } on RecipeAlreadyPresent catch (e) {
+                  if (context.mounted) {
+                    await e.showAlert(context, _nameController.text);
+                    return;
+                  }
+                }
                 if (context.mounted) {
                   Utils.pop(
                       context: context, currentRouteName: 'create_new_meal');

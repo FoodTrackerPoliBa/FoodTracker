@@ -6,6 +6,7 @@ import 'package:food_traker/setup.dart';
 import 'package:food_traker/src/backend/backend.dart';
 import 'package:food_traker/src/backend/gemini_manager.dart';
 import 'package:food_traker/src/backend/user_data.dart';
+import 'package:food_traker/src/dashboard/create_new_meal/create_new_meal.dart';
 import 'package:food_traker/src/dashboard/settings/ingredients_view.dart';
 import 'package:food_traker/src/dashboard/settings/preview_activity_level.dart';
 import 'package:food_traker/src/dashboard/settings/preview_gender.dart';
@@ -230,10 +231,21 @@ class _SettingsState extends State<Settings> {
             subtitle: const Text('View and manage your recipes'),
             onTap: () {
               Utils.push(
-                      context: context,
-                      routeName: 'recipes_view',
-                      page: const RecipesView())
-                  .then((_) {
+                  context: context,
+                  routeName: 'recipes_view',
+                  page: RecipesSelector(
+                    title: "List of recipes",
+                    showEmptyRecipe: false,
+                    onRecipePressed: (recipe) {
+                      Utils.push(
+                        context: context,
+                        routeName: 'create_new_meal',
+                        page: CreateNewMeal(
+                          meal: recipe,
+                        ),
+                      );
+                    },
+                  )).then((_) {
                 setState(() {});
               });
             },

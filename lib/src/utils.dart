@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:food_traker/src/backend/analytics.dart';
 import 'package:food_traker/src/backend/backend.dart';
+import 'package:food_traker/src/backend/types/recipe.dart';
 
 class CustomTextInputFormatter {
   static List<TextInputFormatter> doubleOnly() => <TextInputFormatter>[
@@ -44,9 +45,9 @@ class Utils {
         .push<T>(MaterialPageRoute(builder: (context) => page));
   }
 
-  static Future<void> pop(
-      {required BuildContext context, required String currentRouteName}) async {
-    Navigator.of(context).pop();
+  static Future<void> pop<T>(
+      {required BuildContext context, required String currentRouteName, T? payload}) async {
+    Navigator.of(context).pop<T>(payload);
     analytics.routePop(currentRouteName).ignore();
   }
 
@@ -63,6 +64,41 @@ class Utils {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  static Future<void> deleteRecipe(BuildContext context, Recipe recipe) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Delete recipe"),
+          content: Text(
+              "Are you sure you want to delete the recipe ${recipe.name}?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Utils.pop(context: context, currentRouteName: 'recipes_view');
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await backend.deleteRecipe(recipe.id);
+                if (context.mounted) {
+                  Utils.pop(context: context, currentRouteName: 'recipes_view');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Deleted ${recipe.name}"),
+                    ),
+                  );
+                }
+              },
+              child: const Text("Delete"),
             ),
           ],
         );

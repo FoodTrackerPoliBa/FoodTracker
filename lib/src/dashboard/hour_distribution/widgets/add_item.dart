@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:food_traker/src/backend/types/meal_type.dart';
 import 'package:food_traker/src/dashboard/add_activity/add_activity.dart';
+import 'package:food_traker/src/dashboard/add_meal_details/add_meal_details.dart';
 import 'package:food_traker/src/dashboard/add_meal_intake/add_meal_intake.dart';
+import 'package:food_traker/src/dashboard/settings/recipes_view.dart';
 import 'package:food_traker/src/utils.dart';
 
 class AddItem extends StatelessWidget {
   const AddItem({super.key, required this.timeSelected});
   final DateTime timeSelected;
+
+  void buildNextPage(
+      MealType mealType, DateTime timeSelected, BuildContext context) {
+    Utils.push(
+        context: context,
+        routeName: 'add_meal_intake',
+        page: RecipesSelector(
+          title: mealType.name,
+          onRecipePressed: (recipe) {
+            Utils.push(
+                context: context,
+                routeName: 'recieps_view',
+                page: AddMealDetails(
+                  meal: recipe,
+                  mealType: mealType,
+                  timeSelected: timeSelected,
+                ));
+          },
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

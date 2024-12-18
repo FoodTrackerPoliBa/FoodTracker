@@ -160,6 +160,9 @@ class _AddMealIntakeState extends State<AddMealIntake> {
                                   ),
                                 );
                               },
+                              onLongPress: () async {
+                                await Utils.deleteRecipe(context, meal);
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.0),

@@ -15,6 +15,7 @@ import 'package:food_traker/src/dashboard/add_ingredient/ingredient_controller.d
 import 'package:food_traker/src/dashboard/add_meal_details/summary_details.dart';
 import 'package:food_traker/src/dashboard/chatbot/chatbox.dart';
 import 'package:food_traker/src/dashboard/common_widgets/ingredient_tile.dart';
+import 'package:food_traker/src/dashboard/settings/recipes_view.dart';
 import 'package:food_traker/src/globals.dart';
 import 'package:food_traker/src/utils.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,6 +47,8 @@ class _AddMealDetailsState extends State<AddMealDetails> {
       TextEditingController();
   final TextEditingController titleController = TextEditingController();
   final IngredientController ingredientController = IngredientController();
+  final GlobalKey addIconButtonKey = GlobalKey();
+
   bool calculatePrice = true;
 
   DateTime get timeSelected {
@@ -495,13 +498,54 @@ class _AddMealDetailsState extends State<AddMealDetails> {
               ),
             const Spacer(),
             IconButton(
+              key: addIconButtonKey,
               icon: const Icon(Icons.add),
               onPressed: () {
-                Utils.push(
-                    context: context,
-                    routeName: 'add_ingredient',
-                    page: AddIngredient(
-                        ingredientController: ingredientController));
+                final RenderBox renderBox = addIconButtonKey.currentContext!
+                    .findRenderObject() as RenderBox;
+                final position = renderBox.localToGlobal(Offset.zero);
+
+                showMenu(
+                  context: context,
+                  position: RelativeRect.fromRect(
+                    Rect.fromLTWH(
+                        position.dx,
+                        position.dy + renderBox.size.height,
+                        renderBox.size.width,
+                        renderBox.size.height),
+                    Offset.zero & renderBox.size,
+                  ),
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem<String>(
+                      value: 'add_recipe',
+                      child: const Text('Add recipe'),
+                      onTap: () async {
+                        final Recipe? recipeSelected = await Utils.push<Recipe>(
+                            context: context,
+                            routeName: 'add_recipes',
+                            page: const RecipesSelector(
+                              title: "Select recipe",
+                              showEmptyRecipe: false,
+                            ));
+                        if (recipeSelected != null) {
+                          ingredientController
+                              .addIngredients(recipeSelected.ingredients);
+                        }
+                      },
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'add_ingredient',
+                      child: const Text('Add ingredients'),
+                      onTap: () {
+                        Utils.push(
+                            context: context,
+                            routeName: 'add_ingredient',
+                            page: AddIngredient(
+                                ingredientController: ingredientController));
+                      },
+                    ),
+                  ],
+                );
               },
             ),
           ],

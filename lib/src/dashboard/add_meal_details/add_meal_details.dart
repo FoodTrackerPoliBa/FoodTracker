@@ -99,6 +99,105 @@ class _AddMealDetailsState extends State<AddMealDetails> {
     super.initState();
   }
 
+  Future<bool> askSaveAsNewRecipe() async {
+    final saveNewRecipe = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Save as New Recipe'),
+          content: const Text(
+              'Do you want to save this combination of ingredients as a new recipe?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('No'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+
+    return saveNewRecipe ?? false;
+  }
+
+  Future<String?> askNameOfNewRecipe() async {
+    String? newRecipeName = titleController.text;
+    final useMealName = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('New Recipe Name'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text(
+                  'Do you want to use the meal name as the new recipe name or assign a new one?'),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      newRecipeName = titleController.text;
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text('Use Meal Name'),
+                  ),
+                  FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Assign New Name'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    if (useMealName == null) return null;
+
+    if (!useMealName && mounted) {
+      final nameController = TextEditingController();
+      newRecipeName = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Enter New Recipe Name'),
+            content: TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                    hintText: 'New Recipe Name', border: OutlineInputBorder())),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(nameController.text);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return newRecipeName;
+  }
+
   Future<void> saveMeal() async {
     final int? nTotalPortions = int.tryParse(nTotalPortionsController.text);
     final int? nEatenPortions = int.tryParse(nEatenPortionsController.text);
@@ -267,6 +366,18 @@ class _AddMealDetailsState extends State<AddMealDetails> {
       mealSession: widget.mealSession?.id,
       calculatePriceFlag: calculatePrice,
     );
+    if (widget.meal != null && widget.meal?.id == Recipe.empty().id) {
+      /// If the id of the passed meal is equal to the id of an empty recipe,
+      /// means that the user added ingredients from scratch without a recipe.
+      /// We can ask to the user if he want to save this as a recipe
+      bool response = await askSaveAsNewRecipe();
+      if (response) {
+        final String? mealName = await askNameOfNewRecipe();
+        if (mealName != null) {
+          await backend.addMeal(mealName, ingredientController.ingredients);
+        }
+      }
+    }
     if (mounted) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }

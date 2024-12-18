@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:food_traker/src/backend/backend.dart';
 import 'package:food_traker/src/backend/gemini_manager.dart';
 import 'package:food_traker/src/backend/meal_data.dart';
@@ -452,6 +453,7 @@ class _AddMealDetailsState extends State<AddMealDetails> {
                         labelText: 'Portions',
                         isDense: true,
                       ),
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       keyboardType: TextInputType.number,
                     ),
                   );
@@ -467,6 +469,7 @@ class _AddMealDetailsState extends State<AddMealDetails> {
                   labelText: 'Eaten',
                   isDense: true,
                 ),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 keyboardType: TextInputType.number,
               ),
             ),

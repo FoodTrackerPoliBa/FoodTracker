@@ -1220,25 +1220,25 @@ SELECT SUM(price) FROM MealSession where timestamp >= ? AND timestamp <= ?
 
   /// Check if exists a recipe that contains these ingredients
   Future<bool> existsRecipe(List<Ingredient> ingredients) async {
-    final List<Object?> params = [];
-    String query = '''
-      SELECT DISTINCT recipe_id 
-      FROM RecipesIngredients 
-      WHERE food_id IN (''';
-
-    for (final Ingredient ingredient in ingredients) {
-      query += '?';
-      params.add(ingredient.id);
-      query += ', ';
+    bool equalIngredients(
+        List<Ingredient> ingredients1, List<Ingredient> ingredients2) {
+      if (ingredients1.length != ingredients2.length) {
+        return false;
+      }
+      final List<int> ids1 = ingredients1.map((e) => e.id).toList();
+      final List<int> ids2 = ingredients2.map((e) => e.id).toList();
+      ids1.sort();
+      ids2.sort();
+      return ids1.every((element) => ids2.contains(element));
     }
 
-    query = '${query.substring(0, query.length - 2)})';
-
-    final List<Map<String, dynamic>> results = await db.rawQuery(query, params);
-    if (results.isEmpty) {
-      return false;
+    List<Recipe> recipes = await backend.getRecipes();
+    for (Recipe recipe in recipes) {
+      if (equalIngredients(recipe.ingredients, ingredients)) {
+        return true;
+      }
     }
-    return results.isNotEmpty;
+    return false;
   }
 }
 

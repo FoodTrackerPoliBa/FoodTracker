@@ -368,7 +368,7 @@ class _AddMealDetailsState extends State<AddMealDetails> {
     );
     bool existsRecipe =
         await backend.existsRecipe(ingredientController.ingredients);
-    if (existsRecipe) {
+    if (!existsRecipe) {
       /// This is a new combination of ingredients
       /// We can ask to the user if he want to save this as a recipe
       bool response = await askSaveAsNewRecipe();

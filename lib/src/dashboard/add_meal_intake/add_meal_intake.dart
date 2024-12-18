@@ -115,11 +115,7 @@ class _AddMealIntakeState extends State<AddMealIntake> {
                                       context: context,
                                       routeName: "add_meal_details",
                                       page: AddMealDetails(
-                                        meal: Recipe(
-                                            id: 0,
-                                            name: "",
-                                            ingredients: [],
-                                            count: 0),
+                                        meal: Recipe.empty(),
                                         mealType: widget.mealType,
                                         timeSelected: widget.timeSelected,
                                       ),

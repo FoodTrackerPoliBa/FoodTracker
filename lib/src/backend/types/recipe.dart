@@ -42,4 +42,13 @@ class Recipe {
     required this.ingredients,
     required this.count,
   });
+
+  factory Recipe.empty() {
+    return Recipe(
+      id: -1,
+      name: '',
+      ingredients: [],
+      count: -1,
+    );
+  }
 }

@@ -94,6 +94,18 @@ class SummaryDetails extends StatelessWidget {
     final double totalNutrients =
         totalCarbs + totalProteins + totalFiber + totalFat;
 
+    if ([
+      (totalCarbs / totalNutrients * 100),
+      (totalProteins / totalNutrients * 100),
+      (totalFiber / totalNutrients * 100),
+      (totalFat / totalNutrients * 100),
+    ].any((value) => value.isNaN)) {
+      return const Center(
+          child: Text(
+              "No Data.\nPlease add quantities to get the nutrients value.",
+              textAlign: TextAlign.center));
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -366,9 +366,10 @@ class _AddMealDetailsState extends State<AddMealDetails> {
       mealSession: widget.mealSession?.id,
       calculatePriceFlag: calculatePrice,
     );
-    if (widget.meal != null && widget.meal?.id == Recipe.empty().id) {
-      /// If the id of the passed meal is equal to the id of an empty recipe,
-      /// means that the user added ingredients from scratch without a recipe.
+    bool existsRecipe =
+        await backend.existsRecipe(ingredientController.ingredients);
+    if (existsRecipe) {
+      /// This is a new combination of ingredients
       /// We can ask to the user if he want to save this as a recipe
       bool response = await askSaveAsNewRecipe();
       if (response) {

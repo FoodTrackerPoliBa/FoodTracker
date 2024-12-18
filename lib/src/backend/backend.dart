@@ -1217,6 +1217,29 @@ SELECT SUM(price) FROM MealSession where timestamp >= ? AND timestamp <= ?
           'Failed to send event to server. Status code: ${response.statusCode}');
     }
   }
+
+  /// Check if exists a recipe that contains these ingredients
+  Future<bool> existsRecipe(List<Ingredient> ingredients) async {
+    final List<Object?> params = [];
+    String query = '''
+      SELECT DISTINCT recipe_id 
+      FROM RecipesIngredients 
+      WHERE food_id IN (''';
+
+    for (final Ingredient ingredient in ingredients) {
+      query += '?';
+      params.add(ingredient.id);
+      query += ', ';
+    }
+
+    query = '${query.substring(0, query.length - 2)})';
+
+    final List<Map<String, dynamic>> results = await db.rawQuery(query, params);
+    if (results.isEmpty) {
+      return false;
+    }
+    return results.isNotEmpty;
+  }
 }
 
 Backend backend = Backend();

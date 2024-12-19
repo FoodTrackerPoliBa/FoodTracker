@@ -61,6 +61,7 @@ dependencies:
   talker: ^4.5.2
   talker_flutter: ^4.5.2
   talker_http_logger: ^0.1.0-dev.21
+  http_interceptor: ^2.0.0
 
 dev_dependencies:
   flutter_test:

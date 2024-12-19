@@ -8,10 +8,11 @@ class IngredientController extends ChangeNotifier {
   Map<int, TextEditingController> textEditingControllers = {};
 
   void addIngredient(Ingredient ingredient) {
+    if (_ingredients.contains(ingredient)) return;
     _ingredients.add(ingredient);
     textEditingControllers[ingredient.id] = TextEditingController();
     textEditingControllers[ingredient.id]!.addListener(() {
-        notifyListeners();
+      notifyListeners();
     });
     notifyListeners();
   }

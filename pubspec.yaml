@@ -58,6 +58,9 @@ dependencies:
   shared_preferences_android: ^2.3.4
   uuid: ^4.5.1
   package_info_plus: ^8.1.2
+  talker: ^4.5.2
+  talker_flutter: ^4.5.2
+  talker_http_logger: ^0.1.0-dev.21
 
 dev_dependencies:
   flutter_test:

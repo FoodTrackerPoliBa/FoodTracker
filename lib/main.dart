@@ -87,7 +87,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         // App is hidden. Hide the UI.
         analytics.appHidden();
       default:
-        print('Unknown lifecycle state');
+        logging.error('Unknown lifecycle state');
+        throw Exception('Unknown lifecycle state');
     }
   }
 

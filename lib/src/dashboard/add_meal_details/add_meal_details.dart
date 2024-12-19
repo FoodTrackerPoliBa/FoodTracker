@@ -15,7 +15,7 @@ import 'package:food_traker/src/dashboard/add_ingredient/ingredient_controller.d
 import 'package:food_traker/src/dashboard/add_meal_details/summary_details.dart';
 import 'package:food_traker/src/dashboard/chatbot/chatbox.dart';
 import 'package:food_traker/src/dashboard/common_widgets/ingredient_tile.dart';
-import 'package:food_traker/src/dashboard/settings/recipes_view.dart';
+import 'package:food_traker/src/dashboard/settings/recipes_selector.dart';
 import 'package:food_traker/src/globals.dart';
 import 'package:food_traker/src/utils.dart';
 import 'package:path_provider/path_provider.dart';

@@ -3,7 +3,7 @@ import 'package:food_traker/src/backend/types/meal_type.dart';
 import 'package:food_traker/src/dashboard/add_activity/add_activity.dart';
 import 'package:food_traker/src/dashboard/add_meal_details/add_meal_details.dart';
 import 'package:food_traker/src/dashboard/add_meal_intake/add_meal_intake.dart';
-import 'package:food_traker/src/dashboard/settings/recipes_view.dart';
+import 'package:food_traker/src/dashboard/settings/recipes_selector.dart';
 import 'package:food_traker/src/utils.dart';
 
 class AddItem extends StatelessWidget {

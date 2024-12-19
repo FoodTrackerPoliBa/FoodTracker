@@ -12,7 +12,7 @@ import 'package:food_traker/src/dashboard/settings/preview_activity_level.dart';
 import 'package:food_traker/src/dashboard/settings/preview_gender.dart';
 import 'package:food_traker/src/dashboard/settings/preview_height.dart';
 import 'package:food_traker/src/dashboard/settings/preview_weight.dart';
-import 'package:food_traker/src/dashboard/settings/recipes_view.dart';
+import 'package:food_traker/src/dashboard/settings/recipes_selector.dart';
 import 'package:food_traker/src/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';

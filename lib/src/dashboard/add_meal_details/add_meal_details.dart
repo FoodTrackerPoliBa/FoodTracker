@@ -518,7 +518,13 @@ class _AddMealDetailsState extends State<AddMealDetails> {
                   items: <PopupMenuEntry>[
                     PopupMenuItem<String>(
                       value: 'add_recipe',
-                      child: const Text('Add recipe'),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.receipt),
+                          SizedBox(width: 8),
+                          Text('Add recipe'),
+                        ],
+                      ),
                       onTap: () async {
                         final Recipe? recipeSelected = await Utils.push<Recipe>(
                             context: context,
@@ -535,7 +541,13 @@ class _AddMealDetailsState extends State<AddMealDetails> {
                     ),
                     PopupMenuItem<String>(
                       value: 'add_ingredient',
-                      child: const Text('Add ingredients'),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.add_box),
+                          SizedBox(width: 8),
+                          Text('Add ingredients'),
+                        ],
+                      ),
                       onTap: () {
                         Utils.push(
                             context: context,

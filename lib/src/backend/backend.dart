@@ -18,11 +18,11 @@ import 'package:food_traker/src/backend/types/meal_type.dart';
 import 'package:food_traker/src/backend/types/recipe.dart';
 import 'package:food_traker/src/backend/user_data.dart';
 import 'package:food_traker/src/globals.dart';
+import 'package:food_traker/src/logging.dart';
 import 'package:openfoodfacts/openfoodfacts.dart' as off;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:http/http.dart' as http;
 
 class Backend extends ChangeNotifier {
   Database? _db;
@@ -1203,7 +1203,7 @@ SELECT SUM(price) FROM MealSession where timestamp >= ? AND timestamp <= ?
   Future<void> addEventToServer(
       String userId, String name, Map<String, dynamic> parameters,
       {int? millisecondsSinceEpoch}) async {
-    final response = await http.post(
+    final response = await httpClientWithLogger.post(
       Uri.parse('$analyticsServerUrl/analytics'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
